@@ -74,8 +74,13 @@ func TestWaitForTCPPort(t *testing.T) {
 		"check_interval": []test.Param{*test.NewParam("10ms")},
 	}
 
+	bundle := test.TestStepBundle{
+		TestStepLabel: "test step label",
+		Parameters:    params,
+	}
+
 	plugin := &WaitPort{}
-	if _, err = plugin.Run(ctx, testStepChannels, params, ev, nil); err != nil {
+	if _, err = plugin.Run(ctx, testStepChannels, bundle, ev, nil); err != nil {
 		t.Errorf("Plugin run failed: '%v'", err)
 	}
 	wg.Wait()

@@ -36,7 +36,6 @@ import (
 	hwaas "github.com/linuxboot/contest/plugins/teststeps/hwaas"
 	ping "github.com/linuxboot/contest/plugins/teststeps/ping"
 	qemu "github.com/linuxboot/contest/plugins/teststeps/qemu"
-	randecho "github.com/linuxboot/contest/plugins/teststeps/randecho"
 	sleep "github.com/linuxboot/contest/plugins/teststeps/sleep"
 	sshcmd "github.com/linuxboot/contest/plugins/teststeps/sshcmd"
 	sshcopy "github.com/linuxboot/contest/plugins/teststeps/sshcopy"
@@ -56,7 +55,6 @@ func getPluginConfig() *server.PluginConfig {
 	pc.TestStepLoaders = append(pc.TestStepLoaders, cpucmd.Load)
 	pc.TestStepLoaders = append(pc.TestStepLoaders, echo.Load)
 	pc.TestStepLoaders = append(pc.TestStepLoaders, exec.Load)
-	pc.TestStepLoaders = append(pc.TestStepLoaders, randecho.Load)
 	pc.TestStepLoaders = append(pc.TestStepLoaders, sleep.Load)
 	pc.TestStepLoaders = append(pc.TestStepLoaders, sshcmd.Load)
 	pc.TestStepLoaders = append(pc.TestStepLoaders, sshcopy.Load)

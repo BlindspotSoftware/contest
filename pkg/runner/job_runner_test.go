@@ -463,13 +463,13 @@ func (sfs *stateFullStep) Name() string {
 	return stateFullStepName
 }
 
-func (sfs *stateFullStep) Run(ctx xcontext.Context, ch test.TestStepChannels, params test.TestStepParameters,
+func (sfs *stateFullStep) Run(ctx xcontext.Context, ch test.TestStepChannels, bundle test.TestStepBundle,
 	ev testevent.Emitter, resumeState json.RawMessage,
 ) (json.RawMessage, error) {
 	if sfs.runFunction == nil {
 		return nil, fmt.Errorf("stateFullStep run is not initialised")
 	}
-	return sfs.runFunction(ctx, ch, params, ev, resumeState)
+	return sfs.runFunction(ctx, ch, bundle.Parameters, ev, resumeState)
 }
 
 func (sfs *stateFullStep) ValidateParameters(ctx xcontext.Context, params test.TestStepParameters) error {

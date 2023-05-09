@@ -36,7 +36,9 @@ import (
 	"github.com/linuxboot/contest/pkg/target"
 	"github.com/linuxboot/contest/pkg/test"
 	"github.com/linuxboot/contest/pkg/xcontext"
+	"github.com/linuxboot/contest/plugins/listeners/grpclistener/contestlistener"
 	"github.com/linuxboot/contest/plugins/teststeps"
+	timestamp "google.golang.org/protobuf/types/known/timestamppb"
 )
 
 // Name is the name used to look this plugin up.
@@ -72,8 +74,24 @@ func (ts SSHCmd) Name() string {
 }
 
 // Run executes the cmd step.
-func (ts *SSHCmd) Run(ctx xcontext.Context, ch test.TestStepChannels, params test.TestStepParameters, ev testevent.Emitter, resumeState json.RawMessage) (json.RawMessage, error) {
+func (ts *SSHCmd) Run(ctx xcontext.Context, ch test.TestStepChannels, bundle test.TestStepBundle, ev testevent.Emitter, resumeState json.RawMessage) (json.RawMessage, error) {
 	log := ctx.Logger()
+
+	// Create and fill first Log meta data
+	testStepData := contestlistener.TestStepData{}
+	testStepData.StartTime = timestamp.Now()
+	testStepData.Name = bundle.TestStep.Name()
+	testStepData.Label = bundle.TestStepLabel
+
+	returnFunc := func(ctx xcontext.Context, err error) error {
+		if err != nil {
+			testStepData.Error = err.Error()
+		}
+
+		testStepData.EndTime = timestamp.Now()
+
+		return err
+	}
 
 	// XXX: Dragons ahead! The target (%t) substitution, and function
 	// expression evaluations are done at run-time, so they may still fail
@@ -83,7 +101,7 @@ func (ts *SSHCmd) Run(ctx xcontext.Context, ch test.TestStepChannels, params tes
 	// backend or a random pool of results)
 	// Function evaluation could be done at validation time, but target
 	// substitution cannot, because the targets are not known at that time.
-	if err := ts.validateAndPopulate(params); err != nil {
+	if err := ts.validateAndPopulate(bundle.Parameters); err != nil {
 		return nil, err
 	}
 
@@ -189,6 +207,7 @@ func (ts *SSHCmd) Run(ctx xcontext.Context, ch test.TestStepChannels, params tes
 				return fmt.Errorf("cannot expand command argument '%s': %v", arg, err)
 			}
 			args = append(args, earg)
+			testStepData.Args = fmt.Sprintf("%v %s", &testStepData.Args, earg)
 		}
 
 		// connect to the host
@@ -265,11 +284,12 @@ func (ts *SSHCmd) Run(ctx xcontext.Context, ch test.TestStepChannels, params tes
 					matches := re.FindAll(stdout.Bytes(), -1)
 					if len(matches) > 0 {
 						log.Infof("match for regex '%s' found", expect)
-						return nil
+
+						return returnFunc(ctx, nil)
 					}
 				}
 				if time.Now().After(timeTimeout) {
-					return fmt.Errorf("timed out after %s", timeout)
+					return returnFunc(ctx, fmt.Errorf("timed out after %s", timeout))
 				}
 				// This is needed to keep the connection to the server alive
 				if keepAliveCnt%20 == 0 {
@@ -281,6 +301,7 @@ func (ts *SSHCmd) Run(ctx xcontext.Context, ch test.TestStepChannels, params tes
 			}
 		}
 	}
+
 	return teststeps.ForEachTarget(Name, ctx, ch, f)
 }
 

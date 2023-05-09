@@ -96,10 +96,10 @@ func (q *Qemu) validateAndPopulate(ctx xcontext.Context, params test.TestStepPar
 
 // Run starts the Qemu instance for each target and interacts with the qemu instance
 // through the expect and send steps.
-func (q *Qemu) Run(ctx xcontext.Context, ch test.TestStepChannels, params test.TestStepParameters, ev testevent.Emitter, resumeState json.RawMessage) (json.RawMessage, error) {
+func (q *Qemu) Run(ctx xcontext.Context, ch test.TestStepChannels, bundle test.TestStepBundle, ev testevent.Emitter, resumeState json.RawMessage) (json.RawMessage, error) {
 	log := ctx.Logger()
 
-	if err := q.ValidateParameters(ctx, params); err != nil {
+	if err := q.ValidateParameters(ctx, bundle.Parameters); err != nil {
 		return nil, err
 	}
 	f := func(ctx xcontext.Context, target *target.Target) error {

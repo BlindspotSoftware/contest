@@ -29,7 +29,6 @@ import (
 	"github.com/linuxboot/contest/plugins/teststeps/cmd"
 	"github.com/linuxboot/contest/plugins/teststeps/echo"
 	"github.com/linuxboot/contest/plugins/teststeps/example"
-	"github.com/linuxboot/contest/plugins/teststeps/randecho"
 	"github.com/linuxboot/contest/plugins/teststeps/sleep"
 	"github.com/linuxboot/contest/plugins/teststeps/sshcmd"
 	"github.com/linuxboot/contest/tools/migration/rdbms/migrate"
@@ -85,10 +84,11 @@ type Request struct {
 //   actually submitted at test time.
 
 // Schema v0002 introduces the concept of extended_descriptor, which is defined as follows:
-// type ExtendedDescriptor struct {
-//		JobDescriptor
-//		TestStepsDescriptors []test.TestStepsDescriptors
-// }
+//
+//	type ExtendedDescriptor struct {
+//			JobDescriptor
+//			TestStepsDescriptors []test.TestStepsDescriptors
+//	}
 //
 // We remove TestDescriptors from Request objects, and we store that information side-by-side with
 // JobDescriptor into an ExtendedDescriptor. We then store this ExtendedDescriptor in the jobs table
@@ -428,7 +428,6 @@ var testSteps = []test.TestStepLoader{
 	cmd.Load,
 	echo.Load,
 	example.Load,
-	randecho.Load,
 	sleep.Load,
 	sshcmd.Load,
 }

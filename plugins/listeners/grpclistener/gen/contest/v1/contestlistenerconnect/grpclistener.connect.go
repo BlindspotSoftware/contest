@@ -5,10 +5,10 @@
 package contestlistenerconnect
 
 import (
-	contestlistener "github.com/linuxboot/contest/plugins/listeners/grpclistener/gen/contest/v1"
 	context "context"
 	errors "errors"
 	connect_go "github.com/bufbuild/connect-go"
+	contestlistener "github.com/linuxboot/contest/plugins/listeners/grpclistener/contestlistener"
 	http "net/http"
 	strings "strings"
 )
@@ -23,6 +23,21 @@ const _ = connect_go.IsAtLeastVersion0_1_0
 const (
 	// ConTestServiceName is the fully-qualified name of the ConTestService service.
 	ConTestServiceName = "contest.v1.ConTestService"
+)
+
+// These constants are the fully-qualified names of the RPCs defined in this package. They're
+// exposed at runtime as Spec.Procedure and as the final two segments of the HTTP route.
+//
+// Note that these are different from the fully-qualified method names used by
+// google.golang.org/protobuf/reflect/protoreflect. To convert from these constants to
+// reflection-formatted method names, remove the leading slash and convert the remaining slash to a
+// period.
+const (
+	// ConTestServiceStartJobProcedure is the fully-qualified name of the ConTestService's StartJob RPC.
+	ConTestServiceStartJobProcedure = "/contest.v1.ConTestService/StartJob"
+	// ConTestServiceStatusJobProcedure is the fully-qualified name of the ConTestService's StatusJob
+	// RPC.
+	ConTestServiceStatusJobProcedure = "/contest.v1.ConTestService/StatusJob"
 )
 
 // ConTestServiceClient is a client for the contest.v1.ConTestService service.
@@ -43,12 +58,12 @@ func NewConTestServiceClient(httpClient connect_go.HTTPClient, baseURL string, o
 	return &conTestServiceClient{
 		startJob: connect_go.NewClient[contestlistener.StartJobRequest, contestlistener.StartJobResponse](
 			httpClient,
-			baseURL+"/contest.v1.ConTestService/StartJob",
+			baseURL+ConTestServiceStartJobProcedure,
 			opts...,
 		),
 		statusJob: connect_go.NewClient[contestlistener.StatusJobRequest, contestlistener.StatusJobResponse](
 			httpClient,
-			baseURL+"/contest.v1.ConTestService/StatusJob",
+			baseURL+ConTestServiceStatusJobProcedure,
 			opts...,
 		),
 	}
@@ -83,13 +98,13 @@ type ConTestServiceHandler interface {
 // and JSON codecs. They also support gzip compression.
 func NewConTestServiceHandler(svc ConTestServiceHandler, opts ...connect_go.HandlerOption) (string, http.Handler) {
 	mux := http.NewServeMux()
-	mux.Handle("/contest.v1.ConTestService/StartJob", connect_go.NewUnaryHandler(
-		"/contest.v1.ConTestService/StartJob",
+	mux.Handle(ConTestServiceStartJobProcedure, connect_go.NewUnaryHandler(
+		ConTestServiceStartJobProcedure,
 		svc.StartJob,
 		opts...,
 	))
-	mux.Handle("/contest.v1.ConTestService/StatusJob", connect_go.NewServerStreamHandler(
-		"/contest.v1.ConTestService/StatusJob",
+	mux.Handle(ConTestServiceStatusJobProcedure, connect_go.NewServerStreamHandler(
+		ConTestServiceStatusJobProcedure,
 		svc.StatusJob,
 		opts...,
 	))

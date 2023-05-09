@@ -52,8 +52,8 @@ func (ts TestStep) Name() string {
 }
 
 // Run executes the step.
-func (ts *TestStep) Run(ctx xcontext.Context, ch test.TestStepChannels, params test.TestStepParameters, ev testevent.Emitter, resumeState json.RawMessage) (json.RawMessage, error) {
-	if err := ts.populateParams(params); err != nil {
+func (ts *TestStep) Run(ctx xcontext.Context, ch test.TestStepChannels, bundle test.TestStepBundle, ev testevent.Emitter, resumeState json.RawMessage) (json.RawMessage, error) {
+	if err := ts.populateParams(bundle.Parameters); err != nil {
 		return nil, err
 	}
 

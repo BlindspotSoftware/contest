@@ -85,7 +85,7 @@ func (hws HWaaS) Name() string {
 }
 
 // Run executes the cmd step.
-func (hws *HWaaS) Run(ctx xcontext.Context, ch test.TestStepChannels, params test.TestStepParameters, ev testevent.Emitter, resumeState json.RawMessage) (json.RawMessage, error) {
+func (hws *HWaaS) Run(ctx xcontext.Context, ch test.TestStepChannels, bundle test.TestStepBundle, ev testevent.Emitter, resumeState json.RawMessage) (json.RawMessage, error) {
 	log := ctx.Logger()
 
 	returnFunc := func(err error) {
@@ -101,7 +101,7 @@ func (hws *HWaaS) Run(ctx xcontext.Context, ch test.TestStepChannels, params tes
 	}
 
 	// Validate the parameter
-	if err := hws.validateAndPopulate(params); err != nil {
+	if err := hws.validateAndPopulate(bundle.Parameters); err != nil {
 		returnFunc(fmt.Errorf("failed to validate parameter: %v", err))
 
 		return nil, err

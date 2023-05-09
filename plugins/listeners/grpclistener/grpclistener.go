@@ -14,7 +14,7 @@ import (
 	"github.com/linuxboot/contest/pkg/job"
 	"github.com/linuxboot/contest/pkg/types"
 	"github.com/linuxboot/contest/pkg/xcontext"
-	contestlistener "github.com/linuxboot/contest/plugins/listeners/grpclistener/gen/contest/v1"
+	"github.com/linuxboot/contest/plugins/listeners/grpclistener/contestlistener"
 	"github.com/linuxboot/contest/plugins/listeners/grpclistener/gen/contest/v1/contestlistenerconnect"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
@@ -189,12 +189,19 @@ func (s *GRPCServer) StatusJob(ctx context.Context, req *connect.Request[contest
 
 		buf := make([]byte, 1024)
 		n, err := s.Endpoints[int(req.Msg.JobId)].buffer.Read(buf)
+
+		testStepData := contestlistener.TestStepData{}
+
+		if err := json.Unmarshal(buf, &testStepData); err != nil {
+			return fmt.Errorf("failed to unmarshal data into TestStepData")
+		}
+
 		if n > 0 {
 			// DEBUG
 			if err := stream.Send(&contestlistener.StatusJobResponse{
-				Status: r.Status.State,
-				Error:  r.Status.StateErrMsg,
-				Log:    buf[:n],
+				Status:       r.Status.State,
+				Error:        r.Status.StateErrMsg,
+				TeststepData: &testStepData,
 			}); err != nil {
 				return err
 			}

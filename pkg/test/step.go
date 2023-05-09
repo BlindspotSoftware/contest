@@ -113,7 +113,7 @@ type TestStep interface {
 	// Name returns the name of the step
 	Name() string
 	// Run runs the test step. The test step is expected to be synchronous.
-	Run(ctx xcontext.Context, ch TestStepChannels, params TestStepParameters, ev testevent.Emitter,
+	Run(ctx xcontext.Context, ch TestStepChannels, bundle TestStepBundle, ev testevent.Emitter,
 		resumeState json.RawMessage) (json.RawMessage, error)
 	// ValidateParameters checks that the parameters are correct before passing
 	// them to Run.

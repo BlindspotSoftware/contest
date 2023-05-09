@@ -2,7 +2,9 @@ syntax = "proto3";
 
 package contest.v1;
 
-option go_package = "./contestlistener";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/linuxboot/contest/plugins/listeners/grpclistener/contestlistener";
 
 service ConTestService {
     rpc StartJob(StartJobRequest) returns (StartJobResponse) {}
@@ -28,5 +30,15 @@ message StatusJobResponse {
     string status = 1;
     string error = 2;
     bytes report = 3;
+    TestStepData teststep_data = 4;
+}
+
+message TestStepData {
+    string name = 1;
+    string label = 2;
+    string args = 3;
     bytes log = 4;
+    string error = 5;
+    google.protobuf.Timestamp start_time = 6;
+    google.protobuf.Timestamp end_time = 7;
 }

@@ -68,8 +68,8 @@ type sleepStepData struct {
 }
 
 // Run executes the step
-func (ss *sleepStep) Run(ctx xcontext.Context, ch test.TestStepChannels, params test.TestStepParameters, ev testevent.Emitter, resumeState json.RawMessage) (json.RawMessage, error) {
-	dur, err := getDuration(params)
+func (ss *sleepStep) Run(ctx xcontext.Context, ch test.TestStepChannels, bundle test.TestStepBundle, ev testevent.Emitter, resumeState json.RawMessage) (json.RawMessage, error) {
+	dur, err := getDuration(bundle.Parameters)
 	if err != nil {
 		return nil, err
 	}

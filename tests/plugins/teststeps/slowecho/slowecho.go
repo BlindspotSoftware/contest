@@ -80,8 +80,8 @@ func (e *Step) ValidateParameters(_ xcontext.Context, params test.TestStepParame
 }
 
 // Run executes the step
-func (e *Step) Run(ctx xcontext.Context, ch test.TestStepChannels, params test.TestStepParameters, ev testevent.Emitter, resumeState json.RawMessage) (json.RawMessage, error) {
-	sleep, err := sleepTime(params.GetOne("sleep").String())
+func (e *Step) Run(ctx xcontext.Context, ch test.TestStepChannels, bundle test.TestStepBundle, ev testevent.Emitter, resumeState json.RawMessage) (json.RawMessage, error) {
+	sleep, err := sleepTime(bundle.Parameters.GetOne("sleep").String())
 	if err != nil {
 		return nil, err
 	}
@@ -97,7 +97,7 @@ func (e *Step) Run(ctx xcontext.Context, ch test.TestStepChannels, params test.T
 			ctx.Infof("Returning because cancellation is requested")
 			return xcontext.ErrCanceled
 		}
-		ctx.Infof("target %s: %s", t, params.GetOne("text"))
+		ctx.Infof("target %s: %s", t, bundle.Parameters.GetOne("text"))
 		return nil
 	}
 	return teststeps.ForEachTarget(Name, ctx, ch, f)

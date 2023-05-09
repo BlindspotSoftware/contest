@@ -73,12 +73,12 @@ var (
 )
 
 // Run executes the Dutctl action.
-func (d *Dutctl) Run(ctx xcontext.Context, ch test.TestStepChannels, params test.TestStepParameters,
+func (d *Dutctl) Run(ctx xcontext.Context, ch test.TestStepChannels, bundle test.TestStepBundle,
 	ev testevent.Emitter, resumeState json.RawMessage,
 ) (json.RawMessage, error) {
 	log := ctx.Logger()
 	// Validate the parameter
-	if err := d.validateAndPopulate(params); err != nil {
+	if err := d.validateAndPopulate(bundle.Parameters); err != nil {
 		return nil, err
 	}
 	f := func(ctx xcontext.Context, target *target.Target) error {

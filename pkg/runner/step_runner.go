@@ -408,7 +408,7 @@ func (sr *StepRunner) runningLoop(
 		}()
 
 		inChannels := test.TestStepChannels{In: stepIn, Out: stepOut}
-		return bundle.TestStep.Run(ctx, inChannels, bundle.Parameters, ev, resumeState)
+		return bundle.TestStep.Run(ctx, inChannels, bundle, ev, resumeState)
 	}()
 	ctx.Debugf("TestStep finished '%v', rs %s", err, string(resultResumeState))
 

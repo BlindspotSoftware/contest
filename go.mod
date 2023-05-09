@@ -4,7 +4,6 @@ go 1.18
 
 require (
 	github.com/9elements/fti v0.6.3-0.20230202152603-3135aca74685
-	github.com/aws/aws-sdk-go v1.41.14
 	github.com/benbjohnson/clock v1.1.0
 	github.com/bufbuild/connect-go v1.5.1
 	github.com/bufbuild/connect-grpcreflect-go v1.0.0
@@ -58,7 +57,6 @@ require (
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/hugelgupf/p9 v0.1.0 // indirect
-	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/kevinburke/ssh_config v1.1.0 // indirect
 	github.com/kr/fs v0.1.0 // indirect
 	github.com/mattn/go-colorable v0.1.11 // indirect

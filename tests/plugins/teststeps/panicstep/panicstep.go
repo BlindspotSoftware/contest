@@ -29,7 +29,7 @@ func (ts *panicStep) Name() string {
 }
 
 // Run executes the example step.
-func (ts *panicStep) Run(ctx xcontext.Context, ch test.TestStepChannels, params test.TestStepParameters, ev testevent.Emitter, resumeState json.RawMessage) (json.RawMessage, error) {
+func (ts *panicStep) Run(ctx xcontext.Context, ch test.TestStepChannels, bundle test.TestStepBundle, ev testevent.Emitter, resumeState json.RawMessage) (json.RawMessage, error) {
 	panic("panic step")
 }
 

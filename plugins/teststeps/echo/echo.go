@@ -51,14 +51,14 @@ func (e Step) Name() string {
 }
 
 // Run executes the step
-func (e Step) Run(ctx xcontext.Context, ch test.TestStepChannels, params test.TestStepParameters, ev testevent.Emitter, resumeState json.RawMessage) (json.RawMessage, error) {
+func (e Step) Run(ctx xcontext.Context, ch test.TestStepChannels, bundle test.TestStepBundle, ev testevent.Emitter, resumeState json.RawMessage) (json.RawMessage, error) {
 	for {
 		select {
 		case target, ok := <-ch.In:
 			if !ok {
 				return nil, nil
 			}
-			output, err := params.GetOne("text").Expand(target)
+			output, err := bundle.Parameters.GetOne("text").Expand(target)
 			if err != nil {
 				return nil, err
 			}
