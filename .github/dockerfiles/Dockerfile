@@ -23,6 +23,7 @@ ENV PATH=$PATH:/go/bin
 RUN ln -s /lib/x86_64-linux-gnu/libc.so.6 /lib/libc.so.6
 
 # SSH Magic
+
 RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
 RUN touch /root/.ssh/config
 RUN echo "StrictHostKeyChecking no" > /root/.ssh/config
@@ -56,6 +57,9 @@ RUN pip install -r requirements.txt
 # Add SSH Keys for the DUTs
 ADD .github/assets/ssh-keys/fwci /root/.ssh/fwci
 ADD .github/assets/ssh-keys/fwci.pub /root/.ssh/fwci.pub
+
+# Add ws-proxy-client for HWaaS
+ADD .github/assets/ws-proxy-client /root/hwaas/ws-proxy-client
 
 # Start everything
 WORKDIR /
